@@ -1,0 +1,11 @@
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+* text=auto
+*.sh text eol=lf
+*.gradle text eol=lf
+*.properties text eol=lf
+*.java text eol=lf
+build/
+.gradle/
+application.properties
