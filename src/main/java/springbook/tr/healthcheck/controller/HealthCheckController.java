@@ -1,11 +1,12 @@
-package springbook.tr.controller;
+package springbook.tr.healthcheck.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springbook.tr.model.HealthCheckResponse;
-import springbook.tr.model.HealthStatus;
+import springbook.tr.healthcheck.model.HealthCheckResponse;
+import springbook.tr.healthcheck.model.HealthStatus;
+
 
 @RestController
 @RequestMapping("/v1/api")

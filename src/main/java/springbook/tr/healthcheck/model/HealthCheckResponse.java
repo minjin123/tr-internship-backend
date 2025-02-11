@@ -1,4 +1,4 @@
-package springbook.tr.model;
+package springbook.tr.healthcheck.model;
 
 
 public record HealthCheckResponse(HealthStatus status){}
