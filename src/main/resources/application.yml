@@ -1,0 +1,11 @@
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: ENC(p5QyHk3SC4sLcHj94sGTltNxS8kobYkS7Es3zy2oMsU=)
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
