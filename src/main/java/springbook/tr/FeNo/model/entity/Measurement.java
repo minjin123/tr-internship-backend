@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import springbook.tr.user.model.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,13 +21,12 @@ public class Measurement {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "subject_id")
-  private Subject subject;
+  @JoinColumn(name = "user_id")
+  private User user;
 
-  @ManyToOne
-  @JoinColumn(name = "raw_data_id")
-  private RawData rawData;
-
+  @Lob
+  @Column(name = "raw_content",nullable = false, columnDefinition = "TEXT")
+  private String rawContent;
   @Column(name = "flow_rate" , nullable = false)
   private BigDecimal flowRate;
 

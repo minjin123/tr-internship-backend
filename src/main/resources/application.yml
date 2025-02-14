@@ -9,3 +9,17 @@ jasypt:
     password: ${JASYPT_ENCRYPTOR_PASSWORD}
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+spring:
+  datasource:
+    url: ENC(hswedMZ4hDe4DKTFoGF0a0uXXoxmZeIlqTkjoh/wN4ypV/vhgCW6cRjKMebiT7r6)
+    username: myuser
+    password: ENC(fx879Zcsxn8PaF27WkSlew==)
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
