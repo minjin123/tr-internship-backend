@@ -3,6 +3,7 @@ package springbook.tr.user.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,5 +33,18 @@ public class User {
 
   @LastModifiedDate
   private LocalDateTime updatedAt;
+
+  public User(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
+
+  public User() {
+
+  }
+
+  public void PasswordEncoder(String password) {
+    this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+  }
 
 }
