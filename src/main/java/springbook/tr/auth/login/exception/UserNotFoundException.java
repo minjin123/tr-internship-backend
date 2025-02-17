@@ -1,4 +1,7 @@
 package springbook.tr.auth.login.exception;
 
-public class UserNotFoundException {
+public class UserNotFoundException extends  RuntimeException{
+  public UserNotFoundException(String message) {
+    super(message);
+  }
 }

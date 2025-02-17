@@ -7,7 +7,9 @@ import lombok.Getter;
 public enum ResponseCode {
   NOT_ISSUE(0,"OK"),
   EXITS_USER(1,"Bad Request"),
-  NOT_MATCH(2,"Bad Request");
+  NOT_MATCH(2,"Bad Request"),
+  NOT_FOUND(3,"Not Found");
+
   private final int subCode;
   private final String message;
 
