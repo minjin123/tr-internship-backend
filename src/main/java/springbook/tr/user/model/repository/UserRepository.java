@@ -1,4 +1,4 @@
-package springbook.tr.user.model.respository;
+package springbook.tr.user.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

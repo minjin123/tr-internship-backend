@@ -7,7 +7,7 @@ import springbook.tr.auth.signup.exception.UserAlreadyExistsException;
 import springbook.tr.auth.signup.model.SignUpRequestDTO;
 import springbook.tr.auth.signup.model.SignUpResponseDTO;
 import springbook.tr.user.model.entity.User;
-import springbook.tr.user.model.respository.UserRepository;
+import springbook.tr.user.model.repository.UserRepository;
 
 @Service
 public class SignUpService {
@@ -20,13 +20,13 @@ public class SignUpService {
 
   // 회원 가입
   @Transactional
-  public SignUpResponseDTO signUP(SignUpRequestDTO signUpRequestDTO) {
+  public SignUpResponseDTO signUp(SignUpRequestDTO signUpRequestDTO) {
 
 
     validSignUp(signUpRequestDTO);
 
     User user = signUpRequestDTO.toEntity();
-    user.PasswordEncoder(signUpRequestDTO.getPassword1());
+    user.passwordEncoder(signUpRequestDTO.getPassword1());
     userRepository.save(user);
 
     return new SignUpResponseDTO(user.getId());

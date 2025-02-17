@@ -23,7 +23,7 @@ public class SignUpController {
   }
   @PostMapping("/users")
   public ResponseEntity<Object> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO) {
-    SignUpResponseDTO signUpResponseDTO = signUpService.signUP(signUpRequestDTO);
+    SignUpResponseDTO signUpResponseDTO = signUpService.signUp(signUpRequestDTO);
 
     return HttpResponseBody.builder()
             .code(HttpStatus.OK.value())
