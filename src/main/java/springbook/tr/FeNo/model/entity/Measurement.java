@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import springbook.tr.user.model.entity.Patient;
 import springbook.tr.user.model.entity.User;
 
 import java.math.BigDecimal;
@@ -21,8 +22,8 @@ public class Measurement {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
+  @JoinColumn(name = "patient_id", nullable = false)
+  private Patient patient;
 
   @Lob
   @Column(name = "raw_content",nullable = false, columnDefinition = "TEXT")

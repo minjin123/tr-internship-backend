@@ -5,25 +5,29 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import springbook.tr.FeNo.model.entity.Measurement;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class UserProfile {
+public class Patient {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
 
   private Long id;
 
-  @OneToOne
-  @JoinColumn(name = "user_id")
-  @MapsId
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Measurement> measurements;
 
   @Column(nullable = false)
   private String name;
