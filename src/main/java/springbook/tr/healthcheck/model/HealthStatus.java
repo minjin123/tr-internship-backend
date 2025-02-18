@@ -1,5 +1,5 @@
 package springbook.tr.healthcheck.model;
 
-public enum HealthStatus{
-  UP, DOWN
+public enum HealthStatus {
+	UP, DOWN
 }

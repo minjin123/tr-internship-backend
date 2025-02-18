@@ -1,5 +1,5 @@
 package springbook.tr.healthcheck.model;
 
-
-public record HealthCheckResponse(HealthStatus status){}
+public record HealthCheckResponse(HealthStatus status) {
+}
 
