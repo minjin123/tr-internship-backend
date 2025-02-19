@@ -34,12 +34,12 @@ public class LoginService {
 
 	private User findUserByUserName(String username) {
 		return userRepository.findByUsername(username)
-			.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOND));
+			.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 	}
 
 	private void validatePassword(String password, String encodedPassword) {
 		if (!BCrypt.checkpw(password, encodedPassword)) {
-			throw new CustomException(ErrorCode.USER_NOT_FOND);
+			throw new CustomException(ErrorCode.USER_NOT_FOUND);
 		}
 	}
 }
