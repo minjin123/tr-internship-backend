@@ -1,16 +1,13 @@
 package springbook.tr.auth.login.model;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@Builder
+@RequiredArgsConstructor
 public class LoginRequestDto {
 	private final String username;
 	private final String password;
-
-	// @Builder
-	private LoginRequestDto(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
-
 }

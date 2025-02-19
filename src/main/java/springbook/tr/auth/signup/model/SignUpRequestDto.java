@@ -16,7 +16,10 @@ public class SignUpRequestDto {
 	private String password;
 	private String confirmPassword;
 	public User toEntity() {
-		return new User(username, password);
+		return User.builder()
+			.username(username)
+			.password(password)
+			.build();
 	}
 
 }

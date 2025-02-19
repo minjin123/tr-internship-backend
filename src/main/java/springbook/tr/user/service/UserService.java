@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import springbook.tr.exception.CustomException;
@@ -19,7 +20,7 @@ import springbook.tr.user.model.repository.UserRepository;
 public class UserService {
 	private final UserRepository userRepository;
 
-
+	@Transactional(readOnly = true)
 	public IndividualPatientResponseDto findPatientByUserId(Long userId, Long patientId) {
 		User user = findUserById(userId);
 
@@ -31,6 +32,7 @@ public class UserService {
 		return createIndividualPatientResponse(patient);
 	}
 
+	@Transactional(readOnly = true)
 	public List<PatientListResponseDto> findAllPatientsByUserId(Long userId) {
 		User user = findUserById(userId);
 

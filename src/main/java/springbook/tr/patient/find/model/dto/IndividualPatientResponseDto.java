@@ -1,6 +1,7 @@
 package springbook.tr.patient.find.model.dto;
 
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class IndividualPatientResponseDto {
 	private final String name;
 	private final Integer age;
