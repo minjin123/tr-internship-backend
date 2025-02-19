@@ -3,10 +3,10 @@ package springbook.tr.auth.signup.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import springbook.tr.auth.signup.exception.PasswordMismatchException;
-import springbook.tr.auth.signup.exception.UserAlreadyExistsException;
 import springbook.tr.auth.signup.model.SignUpRequestDto;
 import springbook.tr.auth.signup.model.SignUpResponseDto;
+import springbook.tr.exception.CustomException;
+import springbook.tr.exception.ErrorCode;
 import springbook.tr.user.model.entity.User;
 import springbook.tr.user.model.repository.UserRepository;
 
@@ -21,27 +21,26 @@ public class SignUpService {
 
 	// 회원 가입
 	@Transactional
-	public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDTO) {
+	public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
 
-		validSignUp(signUpRequestDTO);
+		validSignUpRequest(signUpRequestDto);
 
-		User user = signUpRequestDTO.toEntity();
-		user.passwordEncoder(signUpRequestDTO.getPassword1());
+		User user = signUpRequestDto.toEntity();
+		user.passwordEncoder(signUpRequestDto.getPassword());
 		userRepository.save(user);
 
 		return new SignUpResponseDto(user.getId());
 	}
 
 	// 유효 검증 메서드
-	private void validSignUp(SignUpRequestDto signUpRequestDTO) {
+	private void validSignUpRequest(SignUpRequestDto signUpRequestDto) {
 
-		// password1 과 password 2가 맞는지
-		if (!signUpRequestDTO.getPassword1().equals(signUpRequestDTO.getPassword2())) {
-			throw new PasswordMismatchException("Passwords do not match");
+
+		if (!signUpRequestDto.getPassword().equals(signUpRequestDto.getConfirmPassword())) {
+			throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
 		}
-		// 유저가 존재 하는지
-		if (userRepository.findByUsername(signUpRequestDTO.getUsername()).isPresent()) {
-			throw new UserAlreadyExistsException("Username already exists");
+		if (userRepository.findByUsername(signUpRequestDto.getUsername()).isPresent()) {
+			throw new CustomException(ErrorCode.USER_ALREADY_EXISTS);
 		}
 	}
 }

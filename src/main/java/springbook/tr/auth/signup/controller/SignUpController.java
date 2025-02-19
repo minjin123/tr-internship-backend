@@ -2,10 +2,15 @@ package springbook.tr.auth.signup.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import springbook.tr.auth.signup.exception.PasswordMismatchException;
-import springbook.tr.auth.signup.exception.UserAlreadyExistsException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import springbook.tr.auth.signup.model.SignUpRequestDto;
 import springbook.tr.auth.signup.model.SignUpResponseDto;
 import springbook.tr.auth.signup.service.SignUpService;
@@ -23,6 +28,8 @@ public class SignUpController {
 		this.signUpService = signUpService;
 	}
 
+	@Operation(summary = "회원가입", description = "회원가입이 정상적으로 작동하는지 확인합니다.")
+	@ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SignUpResponseDto.class)))
 	@PostMapping("/users")
 	public ResponseEntity<Object> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
 		SignUpResponseDto signUpResponseDto = signUpService.signUp(signUpRequestDto);
@@ -32,26 +39,6 @@ public class SignUpController {
 			.subCode(NOT_ISSUE.getSubCode())
 			.message(NOT_ISSUE.getMessage())
 			.response(signUpResponseDto)
-			.build();
-	}
-
-	@ExceptionHandler(PasswordMismatchException.class)
-	public ResponseEntity<Object> handlePasswordMismatch() {
-		return HttpResponseBody.builder()
-			.code(HttpStatus.BAD_REQUEST.value())
-			.subCode(EXITS_USER.getSubCode())
-			.message(EXITS_USER.getMessage())
-			.response(null)
-			.build();
-	}
-
-	@ExceptionHandler(UserAlreadyExistsException.class)
-	public ResponseEntity<Object> handleUserAlreadyExists() {
-		return HttpResponseBody.builder()
-			.code(HttpStatus.BAD_REQUEST.value())
-			.subCode(NOT_MATCH.getSubCode())
-			.message(NOT_MATCH.getMessage())
-			.response(null)
 			.build();
 	}
 }

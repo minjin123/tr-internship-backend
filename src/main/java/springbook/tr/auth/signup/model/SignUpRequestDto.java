@@ -1,25 +1,22 @@
 package springbook.tr.auth.signup.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import springbook.tr.user.model.entity.User;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SignUpRequestDto {
 
 	private String username;
-	private String password1;
-	private String password2;
-
-	@Builder
-	private SignUpRequestDto(String username, String password1, String password2) {
-		this.username = username;
-		this.password1 = password1;
-		this.password2 = password2;
-	}
-
+	private String password;
+	private String confirmPassword;
 	public User toEntity() {
-		return new User(username, password1);
+		return new User(username, password);
 	}
 
 }
