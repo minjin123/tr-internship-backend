@@ -1,19 +1,14 @@
 package springbook.tr.http.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum ResponseCode {
-	NOT_ISSUE(0, "OK"),
-	EXITS_USER(1, "Bad Request"),
-	NOT_MATCH(2, "Bad Request"),
-	NOT_FOUND(3, "Not Found");
+	NOT_ISSUE(0, "OK");
+
 
 	private final int subCode;
 	private final String message;
-
-	ResponseCode(int subCode, String message) {
-		this.subCode = subCode;
-		this.message = message;
-	}
 }
