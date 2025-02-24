@@ -13,11 +13,15 @@ import lombok.RequiredArgsConstructor;
 import springbook.tr.FeNo.model.dto.MeasurementResponseDto;
 import springbook.tr.FeNo.model.entity.Measurement;
 import springbook.tr.FeNo.model.repository.MeasurementRepository;
+import springbook.tr.exception.BusinessException;
+import springbook.tr.exception.CustomException;
+import springbook.tr.exception.ErrorCode;
 import springbook.tr.patient.model.entity.Patient;
 import springbook.tr.patient.model.repository.PatientRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MeasurementService {
 
 	private final MeasurementRepository measurementRepository;
@@ -26,37 +30,34 @@ public class MeasurementService {
 	private final MeasurementParser measurementParser;
 	private final MeasurementFileReader measurementFileReader;
 
-	@Transactional
 	public MeasurementResponseDto processAndSaveMeasurements(MultipartFile file, Long patientId) {
-
-		Patient patient = findPaintById(patientId);
+		Patient patient = findPatientById(patientId);
 		List<String> lines = measurementFileReader.readFile(file);
+		String rawContent = String.join("\n", lines);
 		List<Measurement> measurements = new ArrayList<>();
-		addMeasurementValue(lines, patient, measurements);
+		addMeasurementValue(lines, patient, rawContent, measurements);
 		measurementRepository.saveAll(measurements);
 
 		return createAverageFeNoResponse(measurements);
 	}
 
-	private void addMeasurementValue(List<String> lines, Patient patient, List<Measurement> measurements) {
-		StringBuilder rawContentBuilder = new StringBuilder();
+	private void addMeasurementValue(List<String> lines, Patient patient, String rawContent,
+		List<Measurement> measurements) {
 		for (String line : lines) {
-			rawContentBuilder.append(line);
-			Measurement measurement = measurementParser.parseMeasurement(line, rawContentBuilder.toString(), patient);
-			rawContentBuilder.setLength(0);
+			Measurement measurement = measurementParser.parseMeasurement(line, rawContent, patient);
 			if (measurement != null) {
 				measurements.add(measurement);
 			}
 		}
 	}
 
-	private Patient findPaintById(Long patientId) {
+
+	private Patient findPatientById(Long patientId) {
 		return patientRepository.findById(patientId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 ID의 환자를 찾을 수 없습니다: " + patientId));
+			.orElseThrow(() ->new CustomException(ErrorCode.PATIENT_NOT_FOUND));
 	}
 
 	private MeasurementResponseDto createAverageFeNoResponse(List<Measurement> measurements) {
-
 		BigDecimal averageFeNo = createAverageFeNo(measurements);
 
 		return MeasurementResponseDto.builder()
@@ -65,6 +66,9 @@ public class MeasurementService {
 	}
 
 	private BigDecimal createAverageFeNo(List<Measurement> measurements) {
+		if ((measurements == null) || measurements.isEmpty()) {
+			throw new BusinessException(ErrorCode.NULL_OR_EMPTY);
+		}
 		BigDecimal totalFeNo = measurements.stream()
 			.map(Measurement::getNitricOxide)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -73,5 +77,6 @@ public class MeasurementService {
 			BigDecimal.valueOf(measurements.size()), 2, RoundingMode.HALF_UP
 		);
 	}
+
 
 }

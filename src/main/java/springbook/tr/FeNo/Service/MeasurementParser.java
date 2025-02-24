@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import springbook.tr.FeNo.model.entity.Measurement;
+import springbook.tr.exception.BusinessException;
+import springbook.tr.exception.ErrorCode;
 import springbook.tr.patient.model.entity.Patient;
 
 @Service
@@ -16,10 +18,12 @@ public class MeasurementParser {
 	private final PressureCalculate pressureCalculate;
 
 	public Measurement parseMeasurement(String line, String rawContent, Patient patient) {
+
 		String[] values = line.replace("N", "").trim().split("\\s+");
 		if (values.length != 3) {
-			return null;
+			throw new BusinessException(ErrorCode.INVALID_DATA_SIZE);
 		}
+
 		BigDecimal nitricOxide = nitricOxideCalculate.calculateScaled(new BigDecimal(values[1]));
 		BigDecimal pressure = pressureCalculate.calculate(new BigDecimal(values[2]));
 
