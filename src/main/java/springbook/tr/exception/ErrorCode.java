@@ -19,7 +19,7 @@ public enum ErrorCode {
 
 	USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, 1, "유저가 이미 존재합니다."),
 	PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST,  2, "비밀번호가 일치하지 않습니다."),
-	NULL_OR_EMPTY(HttpStatus.BAD_REQUEST, 3, "NULL 이거나 measurements가 비어있습니다.");
+	NULL_OR_EMPTY(HttpStatus.BAD_REQUEST, 3, "측정이 잘못 되었습니다.");
 
 
 	private final HttpStatus status;

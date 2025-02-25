@@ -1,8 +1,7 @@
 package springbook.tr.FeNo.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.stereotype.Service;
@@ -15,33 +14,26 @@ import springbook.tr.exception.ErrorCode;
 public class MeasurementFileReader {
 
 	public String readFile(MultipartFile file) {
-		StringBuilder sb = new StringBuilder();
-
-		try (BufferedReader br = new BufferedReader(
-			new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(formatRawData(line)).append("\n");
+		try {
+			String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+			if (content.isEmpty()) {
+				throw new BusinessException(ErrorCode.NULL_OR_EMPTY);
 			}
+			return formatRawData(content);
 		} catch (IOException e) {
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		return sb.toString().trim();
 	}
 
 	private String formatRawData(String rawData) {
-
-		int chunkSize = 17;
 		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < rawData.length(); i += chunkSize) {
-			if (i + chunkSize <= rawData.length()) {
-				String chunk = rawData.substring(i, i + chunkSize);
-				chunk = chunk.replaceFirst("^N", "").trim();
-				sb.append(chunk).append("\n");
+		String[] chunks = rawData.split("N");
+		for (String chunk : chunks) {
+			if (!chunk.isBlank()) {
+				sb.append(chunk.trim()).append("\n");
 			}
 		}
 		return sb.toString().trim();
+
 	}
 }
