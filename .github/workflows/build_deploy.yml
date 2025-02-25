@@ -25,11 +25,11 @@ jobs:
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v3
       with:
-        cache-read-only: false  
+        cache-read-only: false
         gradle-home-cache-cleanup: false  # ✅ 캐시 정리 비활성화하여 Gradle 오류 방지
 
     - name: Grant execute permission to Gradle wrapper
-      run: chmod +x ./gradlew 
+      run: chmod +x ./gradlew
 
     - name: Clear Gradle Cache (Optional, if needed)
       run: |
@@ -63,8 +63,8 @@ jobs:
     needs: build
     name: Deploy
     runs-on: [ self-hosted, label-development ]
-    
+
     steps:
     - name: Run deployment script
       run: |
-        sudo sh /home/ec2-user/run.sh
+        sudo sh /home/ubuntu/run.sh
