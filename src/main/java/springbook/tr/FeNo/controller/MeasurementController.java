@@ -42,7 +42,9 @@ public class MeasurementController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공",
 			content = @Content(schema = @Schema(implementation = MeasurementResponseDto.class))),
-		@ApiResponse(responseCode = "400", description = "measurements가 NULL 이거나 비어있습니다.",
+		@ApiResponse(responseCode = "400", description = "결과 측정이 잘못 되었습니다.",
+			content = @Content(schema = @Schema(implementation = GlobalExceptionHandler.class))),
+		@ApiResponse(responseCode = "500", description = "서버 오류가 발생했습니다.",
 			content = @Content(schema = @Schema(implementation = GlobalExceptionHandler.class)))
 	})
 	@PostMapping(value = "/{patientId}/measurements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -74,7 +76,7 @@ public class MeasurementController {
 		List<MeasurementInquiryResponseDto> measurementInquiryResponseDto = measurementRecordInquiryService
 			.getMeasurementRecord(patientId, date);
 		return HttpResponseBody.builder()
-			.code(HttpStatus.CREATED.value())
+			.code(HttpStatus.OK.value())
 			.subCode(NOT_ISSUE.getSubCode())
 			.message(NOT_ISSUE.getMessage())
 			.response(measurementInquiryResponseDto)

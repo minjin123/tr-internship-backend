@@ -1,7 +1,5 @@
 package springbook.tr.FeNo.model.dto;
 
-import java.math.BigDecimal;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MeasurementResponseDto {
-	private BigDecimal nitricOxide;
+	private double avgNitricOxide;
+	private double maxNitricOxide;
+	private double avgPressure;
 
 }
