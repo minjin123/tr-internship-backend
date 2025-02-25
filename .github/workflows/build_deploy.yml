@@ -26,18 +26,24 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
       with:
         cache-read-only: false  
-        gradle-home-cache-cleanup: true  
-        
+        gradle-home-cache-cleanup: false  # ✅ 캐시 정리 비활성화하여 Gradle 오류 방지
+
     - name: Grant execute permission to Gradle wrapper
       run: chmod +x ./gradlew 
-      
+
+    - name: Clear Gradle Cache (Optional, if needed)
+      run: |
+        rm -rf ~/.gradle/caches
+        rm -rf ~/.gradle/wrapper
+      continue-on-error: true  # ✅ 캐시가 없을 경우에도 오류 발생 방지
+
     - name: Build with Gradle
       env:
         JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
         DB_URL: ENC(hswedMZ4hDe4DKTFoGF0a0uXXoxmZeIlqTkjoh/wN4ypV/vhgCW6cRjKMebiT7r6)
         DB_USERNAME: myuser
         DB_PASSWORD: ENC(fx879Zcsxn8PaF27WkSlew==)
-      run: ./gradlew build --daemon
+      run: ./gradlew build --no-daemon --refresh-dependencies  # ✅ 강제 종속성 업데이트
 
     - name: Login to DockerHub
       uses: docker/login-action@v2
