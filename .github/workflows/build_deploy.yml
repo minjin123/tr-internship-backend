@@ -55,6 +55,8 @@ jobs:
     
     steps:
     - name: Run deployment script
+      env:
+        JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
       run: |
-        sudo sh /home/ec2-user/run.sh
+        sudo -ㄸ sh /home/ec2-user/run.sh
 
