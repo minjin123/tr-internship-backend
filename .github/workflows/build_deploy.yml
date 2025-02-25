@@ -30,13 +30,13 @@ jobs:
         
     - name: Grant execute permission to Gradle wrapper
       run: chmod +x ./gradlew 
-
-    - name: Debug Jasypt Password
-      run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}"
       
     - name: Build with Gradle
       env:
         JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+        DB_URL: ENC(hswedMZ4hDe4DKTFoGF0a0uXXoxmZeIlqTkjoh/wN4ypV/vhgCW6cRjKMebiT7r6)
+        DB_USERNAME: myuser
+        DB_PASSWORD: ENC(fx879Zcsxn8PaF27WkSlew==)
       run: ./gradlew build --daemon
 
     - name: Login to DockerHub
