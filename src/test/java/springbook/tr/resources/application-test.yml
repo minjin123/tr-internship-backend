@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ""
+    username: ""
+    password: ""
+  jpa:
+    database-platform: ""
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false

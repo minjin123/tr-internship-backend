@@ -5,7 +5,7 @@ import springbook.tr.healthcheck.model.HealthStatus;
 
 public class HealthCheckService {
 
-  public static HealthCheckResponse getServerHealthStatus(){
-    return new HealthCheckResponse(HealthStatus.UP);
-  }
+	public static HealthCheckResponse getServerHealthStatus() {
+		return new HealthCheckResponse(HealthStatus.UP);
+	}
 }
