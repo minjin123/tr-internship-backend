@@ -1,7 +1,5 @@
 package springbook.tr.FeNo.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,56 +25,107 @@ public class MeasurementService {
 	private final MeasurementRepository measurementRepository;
 	private final PatientRepository patientRepository;
 
-	private final MeasurementParser measurementParser;
 	private final MeasurementFileReader measurementFileReader;
+
+	private final NitricOxideCalculate nitricOxideCalculate;
+	private final PressureCalculate pressureCalculate;
 
 	public MeasurementResponseDto processAndSaveMeasurements(MultipartFile file, Long patientId) {
 		Patient patient = findPatientById(patientId);
-		List<String> lines = measurementFileReader.readFile(file);
-		String rawContent = String.join("\n", lines);
-		List<Measurement> measurements = new ArrayList<>();
-		addMeasurementValue(lines, patient, rawContent, measurements);
-		measurementRepository.saveAll(measurements);
+		String rawContent  = measurementFileReader.readFile(file);
+		List<Double> nitricOxideList = addNitricOxideValue(rawContent);
+		List<Double> pressureList = addPressureValue(rawContent);
 
-		return createAverageFeNoResponse(measurements);
+		double avgNitricOxide = avgNitricOxide(nitricOxideList);
+		double maxNitricOxide = maxNitricOxide(nitricOxideList);
+		double avgPressure = avgPressure(pressureList);
+
+		saveMeasurement(patient, rawContent, avgNitricOxide, avgPressure);
+
+		return createResponse(avgNitricOxide, maxNitricOxide, avgPressure);
 	}
 
-	private void addMeasurementValue(List<String> lines, Patient patient, String rawContent,
-		List<Measurement> measurements) {
-		for (String line : lines) {
-			Measurement measurement = measurementParser.parseMeasurement(line, rawContent, patient);
-			if (measurement != null) {
-				measurements.add(measurement);
+	private double avgNitricOxide(List<Double> nitricOxideList) {
+		double sum = 0;
+		for (double nitricOxide : nitricOxideList) {
+			sum += nitricOxide;
+		}
+		double avg = sum / nitricOxideList.size();
+
+		return Math.round(avg * 100.0) / 100.0;
+	}
+
+	private double avgPressure(List<Double> pressureList) {
+		double sum = 0;
+		for (double pressure : pressureList) {
+			sum += pressure;
+		}
+		double avg = sum / pressureList.size();
+
+		return Math.round(avg * 100.0) / 100.0;
+	}
+
+	private double maxNitricOxide(List<Double> nitricOxideList) {
+		double max = Double.MIN_VALUE;
+		for (double nitricOxide : nitricOxideList) {
+			if (max < nitricOxide) {
+				max = nitricOxide;
 			}
 		}
+		return max;
 	}
 
+	private List<Double> addNitricOxideValue(String rawContent) {
+		List<Double> values = new ArrayList<>();
+		String[] lines = rawContent.split("\n");
+
+		for (String line : lines) {
+			String[] tokens = line.split("\\s+");
+			if (tokens.length != 3) {
+				throw new BusinessException(ErrorCode.INVALID_DATA_SIZE);
+			}
+			double value = Double.parseDouble(tokens[1]);
+			values.add(nitricOxideCalculate.calculateScaled(value));
+		}
+		return values;
+	}
+
+	private List<Double> addPressureValue(String rawContent) {
+		List<Double> values = new ArrayList<>();
+		String[] lines = rawContent.split("\n");
+
+		for (String line : lines) {
+			String[] tokens = line.split("\\s+");
+			if (tokens.length != 3) {
+				throw new BusinessException(ErrorCode.INVALID_DATA_SIZE);
+			}
+			double value = Double.parseDouble(tokens[2]);
+			values.add(pressureCalculate.calculate(value));
+		}
+		return values;
+	}
 
 	private Patient findPatientById(Long patientId) {
 		return patientRepository.findById(patientId)
 			.orElseThrow(() ->new CustomException(ErrorCode.PATIENT_NOT_FOUND));
 	}
 
-	private MeasurementResponseDto createAverageFeNoResponse(List<Measurement> measurements) {
-		BigDecimal averageFeNo = createAverageFeNo(measurements);
-
+	private MeasurementResponseDto createResponse(double avgNitricOxide, double maxNitricOxide, double avgPressure) {
 		return MeasurementResponseDto.builder()
-			.nitricOxide(averageFeNo)
+			.avgNitricOxide(avgNitricOxide)
+			.maxNitricOxide(maxNitricOxide)
+			.avgPressure(avgPressure)
 			.build();
 	}
 
-	private BigDecimal createAverageFeNo(List<Measurement> measurements) {
-		if ((measurements == null) || measurements.isEmpty()) {
-			throw new BusinessException(ErrorCode.NULL_OR_EMPTY);
-		}
-		BigDecimal totalFeNo = measurements.stream()
-			.map(Measurement::getNitricOxide)
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
-
-		return totalFeNo.divide(
-			BigDecimal.valueOf(measurements.size()), 2, RoundingMode.HALF_UP
-		);
+	private void saveMeasurement(Patient patient, String rawContent, double avgNitricOxide, double avgPressure) {
+		Measurement measurement = Measurement.builder()
+			.patient(patient)
+			.rawContent(rawContent)
+			.flowRate(0.0)
+			.nitricOxide(avgNitricOxide)
+			.pressure(avgPressure)
+			.build();
+		measurementRepository.save(measurement);
 	}
-
-
 }

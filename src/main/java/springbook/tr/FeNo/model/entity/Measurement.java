@@ -1,6 +1,5 @@
 package springbook.tr.FeNo.model.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -40,16 +39,16 @@ public class Measurement {
 	private Patient patient;
 
 	@Lob
-	@Column(name = "raw_content", nullable = false, columnDefinition = "TEXT")
+	@Column(name = "raw_content", nullable = false, columnDefinition = "LONGTEXT")
 	private String rawContent;
 	@Column(name = "flow_rate", nullable = false)
-	private BigDecimal flowRate;
+	private double flowRate;
 
 	@Column(name = "nitric_oxide", nullable = false)
-	private BigDecimal nitricOxide;
+	private double nitricOxide;
 
 	@Column(nullable = false)
-	private BigDecimal pressure;
+	private double pressure;
 
 	@CreatedDate
 	@Column(updatable = false)

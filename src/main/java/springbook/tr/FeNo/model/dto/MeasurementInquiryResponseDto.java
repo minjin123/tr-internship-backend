@@ -1,12 +1,12 @@
 package springbook.tr.FeNo.model.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springbook.tr.FeNo.model.entity.Measurement;
 
 @Getter
 @Builder
@@ -14,7 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MeasurementInquiryResponseDto {
 	private LocalDateTime localDateTime;
-	private BigDecimal flowRate;
-	private BigDecimal nitricOxide;
-	private BigDecimal pressure;
+	private double avgNitricOxide;
+	private double avgPressure;
+
+	public static MeasurementInquiryResponseDto from(Measurement measurement) {
+		return MeasurementInquiryResponseDto.builder()
+			.localDateTime(measurement.getCreatedAt())
+			.avgNitricOxide(measurement.getNitricOxide())
+			.avgPressure(measurement.getPressure())
+			.build();
+	}
 }

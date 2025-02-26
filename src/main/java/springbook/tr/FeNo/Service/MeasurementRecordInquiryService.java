@@ -24,7 +24,6 @@ public class MeasurementRecordInquiryService {
 	private final MeasurementRepository measurementRepository;
 	private final PatientRepository patientRepository;
 
-	@Transactional(readOnly = true)
 	public List<MeasurementInquiryResponseDto> getMeasurementRecord(Long patientId, String date) {
 		Patient patient = findPaintById(patientId);
 		LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
@@ -42,12 +41,7 @@ public class MeasurementRecordInquiryService {
 
 	private List<MeasurementInquiryResponseDto> createMeasurementRecordResponse(List<Measurement> measurements) {
 		return measurements.stream()
-			.map(m -> MeasurementInquiryResponseDto.builder()
-				.localDateTime(m.getCreatedAt())
-				.flowRate(m.getFlowRate())
-				.nitricOxide(m.getNitricOxide())
-				.pressure(m.getPressure())
-				.build())
+			.map(MeasurementInquiryResponseDto::from)
 			.collect(Collectors.toList());
 	}
 }
