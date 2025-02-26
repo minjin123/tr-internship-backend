@@ -34,4 +34,18 @@ public class GlobalExceptionHandler {
 			.response(null)
 			.build();
 	}
+
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<Object> handleBusinessException(BusinessException e) {
+		log.error("{}:{}", e.getErrorCode().name(), e.getMessage());
+
+		return HttpResponseBody.builder()
+			.code(e.getErrorCode().getStatus().value())
+			.subCode(e.getErrorCode().getSubCode())
+			.message(e.getErrorCode().getErrorMessage())
+			.response(null)
+			.build();
+	}
+
+
 }

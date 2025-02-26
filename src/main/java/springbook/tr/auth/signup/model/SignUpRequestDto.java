@@ -15,6 +15,7 @@ public class SignUpRequestDto {
 	private String username;
 	private String password;
 	private String confirmPassword;
+
 	public User toEntity() {
 		return User.builder()
 			.username(username)
