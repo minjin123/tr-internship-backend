@@ -1,8 +1,13 @@
 name: tr-internship-backend
 
 on:
-  push:
-    branches: [ develop ]
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'src/**'
+      - 'build.gradle'
+      - 'Dockerfile'
+    branches: [ main ]
 
 env:
   NAME: minjin123
