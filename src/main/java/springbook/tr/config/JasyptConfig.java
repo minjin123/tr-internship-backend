@@ -18,7 +18,14 @@ public class JasyptConfig {
 	@Bean
 	public EnvironmentStringPBEConfig cryptConfig() {
 		EnvironmentStringPBEConfig config = new EnvironmentStringPBEConfig();
+
+		config.setPoolSize("1");
 		config.setAlgorithm("PBEWithMD5AndDES");
+		config.setStringOutputType("base64");
+		config.setKeyObtentionIterations("1000");
+		config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+		config.setIvGeneratorClassName("org.jasypt.iv.NoIvGenerator");
+
 		String password = System.getenv("JASYPT_ENCRYPTOR_PASSWORD");
 		if (password == null || password.isEmpty()) {
 			throw new IllegalStateException("환경 변수 JASYPT_ENCRYPTOR_PASSWORD가 설정되지 않았습니다.");
