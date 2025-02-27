@@ -72,4 +72,4 @@ jobs:
     steps:
     - name: Run deployment script
       run: |
-        sudo sh /home/ubuntu/run.sh
+        sudo sh /home/ubuntu/blue-green-deploy.sh
